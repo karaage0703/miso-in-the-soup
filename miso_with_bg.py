@@ -11,8 +11,10 @@ import numpy as np
 
 from system_prompt import base_prompt
 
-WINDOW_WIDTH = 640
-WINDOW_HEIGHT = 640
+#WINDOW_WIDTH = 640
+#WINDOW_HEIGHT = 640
+WINDOW_WIDTH = 1000
+WINDOW_HEIGHT = 1000
 
 WAIT_TIME_WORD = 2
 WAIT_TIME_IMAGE = 0.01
@@ -24,7 +26,8 @@ def get_message():
     global message
     while True:
         response = ollama.chat(
-            model='gemma:2b',
+            # model='gemma:2b',
+            model='7shi/tanuki-dpo-v1.0:8b-q6_K',
             messages=[{'role': 'user', 'content': base_prompt}],
         )
         message_content = response['message']['content']
@@ -188,13 +191,14 @@ def main():
         draw_image(screen, image, window_width, window_height, frame_count)
 
         # テキストを縁取り付きで描画
-        draw_text_with_outline(screen, message, font, text_color, outline_color, max_width=5, window_width=window_width, window_height=window_height)
+#        draw_text_with_outline(screen, message, font, text_color, outline_color, max_width=5, window_width=window_width, window_height=window_height)
+        draw_text_with_outline(screen, message, font, text_color, outline_color, max_width=10, window_width=window_width, window_height=window_height)
 
         # 画面を左右反転
-        flipped_screen = pygame.transform.flip(screen, True, False)
+        # flipped_screen = pygame.transform.flip(screen, True, False)
 
         # 反転された画面を描画
-        screen.blit(flipped_screen, (0, 0))
+        # screen.blit(flipped_screen, (0, 0))
 
         # 画面を更新
         pygame.display.flip()

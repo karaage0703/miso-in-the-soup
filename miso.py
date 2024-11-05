@@ -24,7 +24,8 @@ def get_message():
     global message
     while True:
         response = ollama.chat(
-            model='gemma:2b',
+            # model='gemma:2b',
+            model='7shi/tanuki-dpo-v1.0:8b-q6_K',
             messages=[{'role': 'user', 'content': base_prompt}],
         )
         message_content = response['message']['content']
@@ -192,7 +193,7 @@ def main():
         flipped_screen = pygame.transform.flip(screen, True, False)
 
         # 反転された画面を描画
-        screen.blit(flipped_screen, (0, 0))
+        # screen.blit(flipped_screen, (0, 0))
 
         # 画面を更新
         pygame.display.flip()
