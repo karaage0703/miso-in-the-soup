@@ -8,10 +8,11 @@ from system_prompt import base_prompt
 
 import miso_in_the_soup_xiao as xiao
 
-SPEAKER_ID = 2
+CHUNK_LIMIT = 20
 
 ACCELERATION_MODE = AccelerationMode.AUTO
 OPEN_JTALK_DICT_DIR = "./open_jtalk_dic_utf_8-1.11"
+SPEAKER_ID = 2
 WAVE_FILE = Path("output.wav")
 
 XIAO_SERIAL_NAME = "/dev/ttyACM0"
@@ -30,6 +31,10 @@ def get_stream_message():
         content = chunk["message"]["content"]
         print(content, end="", flush=True)
         chunks.append(content)
+        if len(chunks) >= CHUNK_LIMIT:
+            print("~", end="", flush=True)
+            response.close()
+            break
 
     full_message = "".join(chunks)
 
@@ -60,6 +65,12 @@ def main():
             .replace("」", "")
             .replace("</llm-code-output>", "")
         )
+        pos = full_message.find("<")
+        if pos >= 0:
+            full_message = full_message[:pos]
+        pos = full_message.find("（")
+        if pos >= 0:
+            full_message = full_message[:pos]
 
         # 音声生成
         audio_query = core.audio_query(full_message, SPEAKER_ID)
