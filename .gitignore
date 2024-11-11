@@ -163,3 +163,11 @@ cython_debug/
 
 # Others
 .DS_Store
+
+/onnxruntime-linux-aarch64-*.tgz
+/onnxruntime-linux-aarch64-*/
+libonnxruntime.so.*
+/open_jtalk_dic_utf_8-*.tar.gz
+/open_jtalk_dic_utf_8-*/
+
+/output.wav
