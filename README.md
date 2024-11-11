@@ -25,7 +25,6 @@ $ python3 miso.py
 
 <a href="media/1.png"><img src="media/1.png" width="400"></a>
 
-
 * [reComputer J2012](https://www.seeedstudio.com/reComputer-J4012-p-5586.html)
 * [AC Adapter 19V 4.74A](https://www.sengoku.co.jp/mod/sgk_cart/detail.php?code=EEHD-5RUL)
 * [AC Adapter Cable](https://www.sengoku.co.jp/mod/sgk_cart/detail.php?code=EEHD-4J44)
@@ -38,6 +37,11 @@ $ python3 miso.py
 ```sh
 $ git clone --depth 1 https://github.com/karaage0703/miso-in-the-soup.git
 $ cd miso-in-the-soup
+```
+
+```sh
+$ pip install pyserial
+$ sudo adduser $USER dialout
 ```
 
 * [VOICEVOXセットアップ](https://zenn.dev/karaage0703/articles/c616475d67a531#voicevox%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97)

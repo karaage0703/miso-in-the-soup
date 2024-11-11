@@ -6,15 +6,15 @@ from voicevox_core import AccelerationMode, VoicevoxCore
 
 from system_prompt import base_prompt
 
+import miso_in_the_soup_xiao as xiao
+
 SPEAKER_ID = 2
 
-open_jtalk_dict_dir = "./open_jtalk_dic_utf_8-1.11"
-out = Path("output.wav")
-acceleration_mode = AccelerationMode.AUTO
+ACCELERATION_MODE = AccelerationMode.AUTO
+OPEN_JTALK_DICT_DIR = "./open_jtalk_dic_utf_8-1.11"
+WAVE_FILE = Path("output.wav")
 
-WAIT_TIME_WORD = 2
-
-message = ""
+XIAO_SERIAL_NAME = "/dev/ttyACM0"
 
 
 def get_stream_message():
@@ -37,14 +37,18 @@ def get_stream_message():
 
 
 def main():
+    xiao.open(XIAO_SERIAL_NAME)
+    xiao.setLed(0)
+
     core = VoicevoxCore(
-        acceleration_mode=acceleration_mode, open_jtalk_dict_dir=open_jtalk_dict_dir
+        acceleration_mode=ACCELERATION_MODE, open_jtalk_dict_dir=OPEN_JTALK_DICT_DIR
     )
     core.load_model(SPEAKER_ID)
 
     while True:
+        # 考え中
+        xiao.setLed(2)
         full_message = get_stream_message()
-
         print("")
 
         # 改行とタブ文字を取り除く
@@ -57,11 +61,14 @@ def main():
             .replace("</llm-code-output>", "")
         )
 
-        # 音声出力
+        # 音声生成
         audio_query = core.audio_query(full_message, SPEAKER_ID)
         wav = core.synthesis(audio_query, SPEAKER_ID)
-        out.write_bytes(wav)
-        playsound(out)
+        WAVE_FILE.write_bytes(wav)
+
+        # 音声出力
+        xiao.setLed(1)
+        playsound(WAVE_FILE)
 
 
 if __name__ == "__main__":
