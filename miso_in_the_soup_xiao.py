@@ -13,6 +13,21 @@ def open(port: str) -> None:
         print("Cannot find miso-in-the-soup-xiao device.")
 
 
+def readline(timeout: float) -> bytes:
+    line = bytearray([])
+    while True:
+        b = ser.read()
+        if len(b) != 1:
+            print("WARNING: Timeout")
+            return None
+
+        line.append(b[0])
+        if b[0] == 10:
+            break
+
+    return line.decode()
+
+
 def capture() -> list:
     if ser is None:
         return [
@@ -22,15 +37,29 @@ def capture() -> list:
             0,
         ]
 
-    values = None
+    values = "  0   0   0   0\n".split()
     ser.write("capture".encode())
     while True:
-        line = ser.readline().decode()
-        if line == "ok\r\n":
+        line = readline(3)
+        if line is None:
             break
+        if line == "ok\r\n":
+            return [int(v) for v in values]
         values = line.split()
 
-    return [int(v) for v in values]
+    ser.reset_input_buffer()
+
+    values = "  0   0   0   0\n".split()
+    ser.write("capture".encode())
+    while True:
+        line = readline(3)
+        if line is None:
+            break
+        if line == "ok\r\n":
+            return [int(v) for v in values]
+        values = line.split()
+
+    raise IOError()
 
 
 def setLed(led_pattern: int) -> None:
@@ -38,9 +67,18 @@ def setLed(led_pattern: int) -> None:
         return
 
     ser.write(f"setLed {led_pattern}".encode())
-    line = ser.readline().decode()
-    if line != "ok\r\n":
-        raise IOError()
+    line = readline(3)
+    if line == "ok\r\n":
+        return
+
+    ser.reset_input_buffer()
+
+    ser.write(f"setLed {led_pattern}".encode())
+    line = readline(3)
+    if line == "ok\r\n":
+        return
+
+    raise IOError()
 
 
 def setVibration(vibration_pattern: int) -> None:
@@ -48,6 +86,15 @@ def setVibration(vibration_pattern: int) -> None:
         return
 
     ser.write(f"setVibration {vibration_pattern}".encode())
-    line = ser.readline().decode()
-    if line != "ok\r\n":
-        raise IOError()
+    line = readline(3)
+    if line == "ok\r\n":
+        return
+
+    ser.reset_input_buffer()
+
+    ser.write(f"setVibration {vibration_pattern}".encode())
+    line = readline(3)
+    if line == "ok\r\n":
+        return
+
+    raise IOError()
