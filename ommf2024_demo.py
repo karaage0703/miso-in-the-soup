@@ -8,6 +8,7 @@ from system_prompt import base_prompt
 
 import miso_in_the_soup_xiao as xiao
 import time
+import datetime
 
 ACCELERATION_MODE = AccelerationMode.AUTO
 OPEN_JTALK_DICT_DIR = "./open_jtalk_dic_utf_8-1.11"
@@ -66,6 +67,8 @@ def main():
                 break
 
             time.sleep(0.1)
+
+        print(datetime.datetime.now().strftime('%H:%M:%S '), end="", flush=True)
 
         # 考え中
         xiao.setLed(2)
