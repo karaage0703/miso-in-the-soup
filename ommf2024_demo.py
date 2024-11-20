@@ -7,8 +7,7 @@ from voicevox_core import AccelerationMode, VoicevoxCore
 from system_prompt import base_prompt
 
 import miso_in_the_soup_xiao as xiao
-
-CHUNK_LIMIT = 20
+import time
 
 ACCELERATION_MODE = AccelerationMode.AUTO
 OPEN_JTALK_DICT_DIR = "./open_jtalk_dic_utf_8-1.11"
@@ -18,7 +17,7 @@ WAVE_FILE = Path("output.wav")
 XIAO_SERIAL_NAME = "/dev/ttyACM0"
 
 
-def get_stream_message():
+def get_stream_message(chunk_limit: int):
     response = ollama.chat(
         # model='gemma:2b',
         model="7shi/tanuki-dpo-v1.0:8b-q6_K",
@@ -31,7 +30,7 @@ def get_stream_message():
         content = chunk["message"]["content"]
         print(content, end="", flush=True)
         chunks.append(content)
-        if len(chunks) >= CHUNK_LIMIT:
+        if len(chunks) >= chunk_limit:
             print("~", end="", flush=True)
             response.close()
             break
@@ -51,9 +50,26 @@ def main():
     core.load_model(SPEAKER_ID)
 
     while True:
+        # タッチ待ち
+        xiao.setLed(4)
+        startTime = time.time()
+        touched = False
+        while time.time() - startTime < 60:
+            sensors = xiao.capture()
+            if (
+                sensors[0] >= 200
+                or sensors[1] >= 200
+                or sensors[2] >= 200
+                or sensors[3] >= 200
+            ):
+                touched = True
+                break
+
+            time.sleep(0.1)
+
         # 考え中
         xiao.setLed(2)
-        full_message = get_stream_message()
+        full_message = get_stream_message(40 if touched else 10)
         print("")
 
         # 改行とタブ文字を取り除く
