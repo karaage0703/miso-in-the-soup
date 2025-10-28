@@ -19,6 +19,31 @@ $ docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/olla
 $ python3 miso.py
 ```
 
+### DGX Spark
+
+#### Setup
+
+Clone the repository:
+
+```sh
+$ git clone --depth 1 https://github.com/karaage0703/miso-in-the-soup.git
+$ cd miso-in-the-soup
+```
+
+Install dependencies with uv:
+
+```sh
+$ uv sync
+```
+
+Download Noto Sans JP font from [Google Fonts](https://fonts.google.com/noto/specimen/Noto+Sans+JP) and place `NotoSansJP-Regular.ttf` in the `fonts/` directory.
+
+#### Run
+
+```sh
+$ uv run python miso_spark.py
+```
+
 ## Ogaki Mini Maker Faire 2024
 
 ### Hardware
@@ -64,3 +89,4 @@ $ python ommf2024_demo.py
 
 * [Seeed reComputer J4012(Jetson Orin NX 16GB)セットアップ情報まとめ](https://zenn.dev/karaage0703/articles/04ca258a89a50e)
 * [Jetson Orin NXでのVOICEVOXを使った音声合成](https://zenn.dev/karaage0703/articles/c616475d67a531)
+* [NVIDIA DGX SparkでローカルAI環境を構築してLLM・画像生成AIを動かしてみた](https://zenn.dev/karaage0703/articles/985ddbd8fa15d3)
